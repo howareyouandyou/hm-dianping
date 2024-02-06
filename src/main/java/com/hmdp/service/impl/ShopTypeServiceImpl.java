@@ -33,11 +33,10 @@ public class ShopTypeServiceImpl extends ServiceImpl<ShopTypeMapper, ShopType> i
         //从redis中查询是否有店铺列表的缓存
         String shopTypeJson=stringRedisTemplate.opsForValue().get("cache:shopType:list");
 
-        if(StrUtil.isNotBlank(shopTypeJson))
+        if(shopTypeJson!=null)
         {
             //有缓存，直接返回
-            ShopType shopType= JSONUtil.toBean(shopTypeJson, ShopType.class);
-            return Result.ok(shopType);
+            return Result.ok(JSONUtil.toList(shopTypeJson, ShopType.class));
         }
 
         // 缓存为空，查询数据库
